@@ -1,0 +1,4 @@
+*.pyc
+.DS_Store
+hi5spider/insert_.*
+hi5spider/insert_db.py
