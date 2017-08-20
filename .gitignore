@@ -1,1 +1,7 @@
 *.pyc
+<<<<<<< HEAD
+=======
+.DS_Store
+hi5spider/insert_.*
+hi5spider/insert_db.py
+>>>>>>> f45be0278c44ff8a5e63be4b7f98f544885bf478
