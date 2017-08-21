@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
-url = "http://careers.cineplex.com/jobs/7388300-serveurs-et-serveuses-vip-dynamiques-cinema-cineplex-odeon-brossard-et-vip"
+url = "http://careers.cineplex.com/jobs/7527173-amusement-cashier-the-rec-room-deerfoot"
 r = requests.get(url)
 c = r.content
 
@@ -30,6 +30,6 @@ soup = soup.find_all('div', class_='job-details__copy')[0]
 clean_html(soup)
 soup.find('h1').extract()
 job_description = str(soup)
-job_description = re.sub(r'^</div>(</br>)+</div>$',job_description)
+job_description = re.sub(r'(</br>)+</div>$',"",job_description)
 
 print(job_description)
