@@ -1,7 +1,7 @@
 import scrapy
 from bs4 import BeautifulSoup
 from geopy import geocoders
-#from hi5spider.insert_db import insert_jobs
+from hi5spider.insert_db import insert_jobs
 import re
 
 class RogersJobSpider (scrapy.Spider):

@@ -27,7 +27,7 @@ class CineplexJobSpider (CrawlSpider):
             yield response.follow(job, self.parse_job)
 
     def parse_job(self, response):
-        conn = psycopg2.connect("")
+        
         def province_field_number(province_name):
             provinces = {
                 "Alberta" : "1",
@@ -53,7 +53,10 @@ class CineplexJobSpider (CrawlSpider):
         def get_lat_lon(address,city,province):
             g = geocoders.GoogleV3(api_key='AIzaSyCZsl42Ue3KaTlNjrhk3WJG1475pugV42g')
             location = None
-            location = g.geocode("{0} {1} {2} Canada".format(address,city,province), timeout=20)
+            if address:
+                location = g.geocode("{0} {1} {2} Canada".format(address,city,province), timeout=20)
+            if location == None:
+                location = g.geocode("{0} {1} Canada".format(city,province), timeout=20)
             if location:
                 lat, lon = location.latitude, location.longitude
                 postal_code_regex = re.search(r'[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d',location.address)
