@@ -29,5 +29,7 @@ address1 = re.search(r'Location:(.*)',address).group(1).strip()
 soup = soup.find_all('div', class_='job-details__copy')[0]
 clean_html(soup)
 soup.find('h1').extract()
-job_discreption = str(soup)
-print(address1)
+job_description = str(soup)
+job_description = re.sub(r'^</div>(</br>)+</div>$',job_description)
+
+print(job_description)
