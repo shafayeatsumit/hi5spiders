@@ -9,7 +9,7 @@ class RogersJobSpider (scrapy.Spider):
     url = 'https://jobs.rogers.com/search/?q=&sortColumn=referencedate&sortDirection=desc&startrow='
     start_urls =[] 
     increment = 0
-    for i in range(13,15):
+    for i in range(0,15):
         new_url = url+str(increment)
         start_urls.append(new_url)
         increment += 25    
@@ -20,7 +20,6 @@ class RogersJobSpider (scrapy.Spider):
     def parse(self, response):
         all_jobs = response.xpath('//*[@id="searchresults"]/tbody/tr/td//a/@href')
         for job in all_jobs:
-            print("single job",job)
             yield response.follow(job, self.parse_job)
 
 
@@ -63,6 +62,7 @@ class RogersJobSpider (scrapy.Spider):
                 return address
             except Exception as e:
                 return None
+
         data = {
             'job_title': extract_with_xpath('//div[@class="jobTitle"]/h1/text()'),
             'province' : province_parsing(job_location_string),
@@ -72,5 +72,6 @@ class RogersJobSpider (scrapy.Spider):
             'postal_code' : job_location_string.split(",")[-1],
             'address1' : get_address(response)
         }
+        print("address", data['address1'])
         insert_jobs(data)
 
