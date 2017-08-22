@@ -3,4 +3,7 @@
 hi5spider/insert_.*
 hi5spider/insert_db.py
 hi5spider/insert_cineplex.py
+hi5spider/insert_course.py
+hi5spider/test.py
+
 
