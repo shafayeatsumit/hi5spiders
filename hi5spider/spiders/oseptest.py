@@ -5,6 +5,7 @@ import json
 from scrapy_splash import SplashRequest
 from datetime import datetime
 from bs4 import BeautifulSoup
+from hi5spider.insert_course import insert_ospe_course
 
 script_detail_page = """
 function main(splash)
@@ -52,30 +53,19 @@ function main(splash)
 end
 """
 class OspeSpider(scrapy.Spider):
-    name = "ospespider"
+    name = "ospetest"
     def __init__(self, *args, **kwargs):     
-        self.root_url = 'https://www.ospe.on.ca/Courses'
+        self.root_url = 'https://www.ospe.on.ca/Courses#895/DL-CVL0064-0817'
     def start_requests(self):
-            yield SplashRequest('https://www.ospe.on.ca/Courses', self.parse,
-                endpoint='execute',
-                args={
-                    'lua_source': lua_first_page,
-                    'timeout': 90
-                }
-            )        
-
-    def parse(self, response):
-        courses_url = response.xpath('//td/a/@href').extract()
-        for url in courses_url:
-            print ("url ==>",url)
-            current_url = self.root_url+url
-            yield SplashRequest(current_url, self.parse_detail,
+            yield SplashRequest(self.root_url, self.parse_detail,
                 endpoint='execute',
                 args={
                     'lua_source': script_detail_page,
                     'timeout': 90
                 }
             )        
+
+       
 
     def parse_detail(self, response):
         #response decoded
@@ -118,5 +108,4 @@ class OspeSpider(scrapy.Spider):
             "web_link" : response.url,
             "website" : "ospe"
         }
-        insert_ospe_course(data)       
-        
+        insert_ospe_course(data)
