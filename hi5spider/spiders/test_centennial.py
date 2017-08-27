@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+
 import scrapy
 import json
 from scrapy_splash import SplashRequest
 from bs4 import BeautifulSoup
-from hi5spider.insert_course import insert_centennial_course
 
 script_first_page = """
 function main(splash)
@@ -21,30 +21,22 @@ end
 """
 
 class CentinalSpider(scrapy.Spider):
-    name = "centennialspider"
+    name = "testcentennial"
     def __init__(self, *args, **kwargs):     
-        self.start_url = 'http://db2.centennialcollege.ca/ce/allprograms.php'
+        self.start_url = 'http://db2.centennialcollege.ca/ce/certdetail.php?CertificateCode=2470'
         self.root_url = 'http://db2.centennialcollege.ca/ce/'
     def start_requests(self):
-        yield scrapy.Request(url= self.start_url , 
-                callback = self.parse
-          
-              )  
-
-    def parse(self, response):
-      print("prse method called +++++++++")
-      courses_url = response.xpath('//*[@id="content"]/table/tr/td[1]/a/@href').extract()
-      print(courses_url)
-      for url in courses_url:
-          current_url = self.root_url+url
-          yield SplashRequest( url = current_url,
-              callback = self.parse_detail,
+        yield SplashRequest(url= self.start_url , 
+                callback = self.parse_detail,
                 endpoint='execute',
                 args={
                     'lua_source': script_first_page,
                     'timeout': 90
-                }  
-            )
+                }            
+              )
+    def clean_text(self,raw_html):
+      return BeautifulSoup(raw_html, "html.parser").text   
+
     def link_fixer(self,soup):
         #fixes the relative path problem of image and
         try: 
@@ -53,7 +45,7 @@ class CentinalSpider(scrapy.Spider):
               if link_text.startswith('coursedetail.php'):
                   link['href'] = link['href'].replace(link['href'], self.root_url+link['href'])
         except Exception as e:
-          print("fixing link error",e)
+          print(e)
         return soup  
 
     def description_parser(self, soup):
@@ -88,7 +80,7 @@ class CentinalSpider(scrapy.Spider):
       else:
         phone = "N/A"
       detail = self.description_parser(soup)
-      web_link = response.url
+
       data = {
           "title" : title,
           "email" : email,
@@ -97,4 +89,28 @@ class CentinalSpider(scrapy.Spider):
           "web_link" : response.url,
           "website" : "centennial"
       }
-      insert_centennial_course(data)
+      print(data)
+   
+   
+  
+
+"""
+soup.find('h2',string="Mandatory Courses")
+soup.find('h2',string="Elective Courses").find_next_sibling('table')
+soup.find('td',string="Contact Telephone").find_next_sibling('td')
+soup.find('td',string="Contact Telephone").find_next_sibling('td')
+Contact E-mail
+soup.find('td',string="Contact E-mail").find_next_sibling('td').find('a').text
+
+soup.find('td',string="Certificate Name").find_next_sibling('td').get_text()
+
+#main description table
+soup.find("table", class_="collapsible course")
+
+#finds all <td> inside main description
+for i in m.find_all('td',class_='gray'):
+  text = i.get_text()
+  i.string = i.string("<b>%s</b>",text)
+  
+soup = BeautifulSoup(response.body,"html.parser")   
+"""

@@ -5,7 +5,7 @@ import json
 from scrapy_splash import SplashRequest
 from datetime import datetime
 from bs4 import BeautifulSoup
-from hi5spider.insert_course import insert_ospe_course
+#from hi5spider.insert_course import insert_ospe_course
 
 script_detail_page = """
 function main(splash)
