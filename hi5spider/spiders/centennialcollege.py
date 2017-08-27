@@ -23,7 +23,7 @@ end
 class CentinalSpider(scrapy.Spider):
     name = "centinalspider"
     def __init__(self, *args, **kwargs):     
-        self.start_url = 'http://db2.centennialcollege.ca/ce/allcourses.php'
+        self.start_url = 'http://db2.centennialcollege.ca/ce/allprograms.php'
         self.root_url = 'http://db2.centennialcollege.ca/ce/'
     def start_requests(self):
         yield SplashRequest(url= self.start_url , 
@@ -53,3 +53,11 @@ class CentinalSpider(scrapy.Spider):
       print("title html =====>",title_html)
       title = self.clean_text(title_html)
       print(title)
+
+"""
+soup.find('h2',string="Mandatory Courses")
+soup.find('h2',string="Elective Courses")
+
+#main description table
+
+"""
